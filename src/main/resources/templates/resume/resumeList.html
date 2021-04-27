@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"/>
+<body>
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+    <div> <div>
+        <form th:object="${resumeSearch}" class="form-inline">
+            <div class="form-group mb-2">
+                <input type="text" th:field="*{name}" class="form- control" placeholder="회원명"/>
+            </div>
+
+            <button type="submit" class="btn btn-primary mb-2">검색</button> </form>
+    </div>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>회원명</th> <th> 이력서 작성 일자</th> <th> 이력서 조회</th> <th> 수정</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${resume}">
+                <td th:text="${item.id}"></td>
+                <td th:text="${item.member.name}"></td>
+                <td th:text="${item.writeDate}"></td>
+                <td>
+                    <a th:href="'javascript:view('+${item.id}+')'"
+                       class="btn btn-light">바로 가기</a>
+                </td>
+                <td>
+                    <a th:href="'javascript:view('+${item.id}+')'"
+                       class="btn btn-info">수정</a>
+                    <a th:href="@{/resume/{id}/delete(id=${item.id})}"
+                       class="btn btn-danger">삭제</a>
+                </td>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div th:replace="fragments/footer :: footer"/>
+</div> <!-- /container -->
+</body>
+
+<script>
+    function view(id) {
+        var form = document.createElement("form");
+        form.setAttribute("method", "get");
+        form.setAttribute("action", "/resume/" + id);
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+    function deleteresume(id) {
+        var form = document.createElement("form");
+        form.setAttribute("method", "post");
+        form.setAttribute("action", "/resume/"+ id+"/delete");
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+</script>
+
+</html>

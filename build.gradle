@@ -1,7 +1,9 @@
+//  init
 plugins {
 	id 'org.springframework.boot' version '2.4.4'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10" // querydsl
 }
 
 group = 'jpabook'
@@ -22,11 +24,52 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-devtools'
+	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.6' // 쿼리 시 파라미터 값을 표출시켜주는 외부 라이브러리
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	implementation 'com.querydsl:querydsl-jpa' // queryDSL
+	implementation 'com.querydsl:querydsl-apt' // 테스트 시에도 queryDSL을 사용하기 위한 옵션}
+	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
 }
+//querydsl 추가 시작
+// querydsl에서 Qclass 생성을 위해서는 Gradle -> Tasks -> build -> build를 수동으로 실행시켜 주어야 생성됨.
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+	//library = "com.querydsl:querydsl-apt"
+	jpa = true
+	querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+	main.java.srcDir querydslDir
+}
+
+configurations {
+	querydsl.extendsFrom compileClasspath
+}
+
+compileQuerydsl {
+	options.annotationProcessorPath = configurations.querydsl
+}
+
+/**
+ * lombok을 사용할 시 넣어줘야 하는 옵
+ */
+project.afterEvaluate {
+	project.tasks.compileQuerydsl.options.compilerArgs = [
+			"-proc:only",
+			"-processor", project.querydsl.processors() +
+					',lombok.launch.AnnotationProcessorHider$AnnotationProcessor'
+	]
+}
+//querydsl 추가 끝
 
 test {
 	useJUnitPlatform()

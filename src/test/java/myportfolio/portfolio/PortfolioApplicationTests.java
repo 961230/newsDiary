@@ -1,10 +1,10 @@
-package jpabook.jpashop;
+package myportfolio.portfolio;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class JpashopApplicationTests {
+class PortfolioApplicationTests {
 
 	@Test
 	void contextLoads() {

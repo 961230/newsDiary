@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<body>
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+    <div>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>이름</th> <th>Introduction</th> <th>Contact</th> <th>Duty</th> <th>About Duty</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="resume : ${resume}">
+                <td th:text="${resume.member.name}"></td>
+                <td th:text="${resume.introduction}"></td>
+                <td th:text="${resume.contact}"></td>
+                <td th:text="${resume.duty}"></td>
+                <td th:text="${resume.dutydetail}"></td>
+            </tr>
+            </tbody>
+
+        </table>
+    </div>
+    <div th:replace="fragments/footer :: footer" />
+</div> <!-- /container -->
+</body>
+</html>
